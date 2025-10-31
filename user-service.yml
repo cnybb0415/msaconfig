@@ -5,25 +5,26 @@ spring:
   application:
     name: user-service
 
+  config:
+    import: optional:configserver:http://config-server:8888
+
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka  # Eureka 서버 주소.
+      defaultZone: http://discovery-server:8761/eureka
   instance:
-    hostname: localhost
+    hostname: user-service
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${server.port}
-    
+
 management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
   tracing:
     sampling:
       probability: 1.0  # 모든 요청 추적
     zipkin:
       tracing:
-        endpoint: http://localhost:9411/api/v2/spans
-
-endpoints:
-  web:
-    exposure:
-      include: '*'
-
+        endpoint: http://zipkin:9411/api/v2/spans  # Docker 환경에서는 localhost → zipkin
