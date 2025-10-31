@@ -4,12 +4,15 @@ server:
 spring:
   application:
     name: order-service
+
   cloud:
     openfeign:
       circuitbreaker:
         enabled: true  # ✅ fallback 기능 활성화
+
   config:
     import: optional:configserver:http://config-server:8888
+
   kafka:
     bootstrap-servers: kafka:9094
     producer:
@@ -26,29 +29,27 @@ eureka:
     instance-id: ${spring.application.name}:${server.port}
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
   tracing:
     sampling:
       probability: 1.0  # 모든 요청 추적
     zipkin:
       tracing:
-        endpoint: http://localhost:9411/api/v2/spans
-
-endpoints:
-  web:
-    exposure:
-      include: '*'
-
+        endpoint: http://zipkin:9411/api/v2/spans  # Docker 환경에서는 localhost → zipkin
 
 resilience4j:
   circuitbreaker:
     instances:
       product-service:  # 반드시 @FeignClient의 name과 일치해야 함
-        registerHealthIndicator: true       # actuator에 노출
+        registerHealthIndicator: true
         slidingWindowType: COUNT_BASED
-        slidingWindowSize: 10              # 최근 10개의 요청 기준
-        minimumNumberOfCalls: 5            # 최소 요청 수 도달해야 상태 평가 시작
-        failureRateThreshold: 50           # 실패율 50% 이상이면 OPEN 상태로 전환
-        waitDurationInOpenState: 50s        # OPEN → HALF_OPEN 대기 시간
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 50s
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
         recordExceptions:
