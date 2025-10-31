@@ -8,13 +8,20 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true  # ✅ fallback 기능 활성화
+  config:
+    import: optional:configserver:http://config-server:8888
+  kafka:
+    bootstrap-servers: kafka:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka # Eureka 서버 주소.
+      defaultZone: http://discovery-server:8761/eureka
   instance:
-    hostname: localhost
+    hostname: order-service
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${server.port}
 
