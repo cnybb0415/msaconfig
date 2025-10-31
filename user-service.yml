@@ -13,6 +13,7 @@ eureka:
     hostname: localhost
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${server.port}
+    
 management:
   tracing:
     sampling:
