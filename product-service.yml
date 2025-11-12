@@ -13,6 +13,7 @@ spring:
     import: optional:configserver:http://config-server:8888
 
   kafka:
+    enabled: true
     bootstrap-servers: kafka:9094
     consumer:
       group-id: product-consumer-group
