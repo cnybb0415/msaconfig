@@ -15,7 +15,7 @@ spring:
 
   kafka:
     enabled: true
-    bootstrap-servers: kafka:9094
+    bootstrap-servers: kafka.default.svc.cluster.local:9094
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
